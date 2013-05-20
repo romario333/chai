@@ -14,6 +14,16 @@ suite('assert', function () {
     chai.expect(function () {
       assert.fail();
     }).to.throw(chai.AssertionError);
+
+    chai.expect(function () {
+      try {
+        console.log('going to fail');
+        assert.fail('failure message');
+      } catch (e) {
+        e.message = 'hahaha';
+        throw e;
+      }
+    }).to.throw(chai.AssertionErrorr, /failure message/);
   });
 
   test('isTrue', function () {

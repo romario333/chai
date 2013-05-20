@@ -572,7 +572,8 @@ suite('expect', function () {
       , badFn = function () { throw new Error('testing'); }
       , refErrFn = function () { throw new ReferenceError('hello'); }
       , ickyErrFn = function () { throw new PoorlyConstructedError(); }
-      , specificErrFn = function () { throw specificError; };
+      , specificErrFn = function () { throw specificError; }
+      , undefinedErrFn = function () { var e = new Error(); e.message = undefined; throw e;};
 
     expect(goodFn).to.not.throw();
     expect(goodFn).to.not.throw(Error);
@@ -590,6 +591,8 @@ suite('expect', function () {
     expect(ickyErrFn).to.throw(PoorlyConstructedError);
     expect(ickyErrFn).to.throw(Error);
     expect(ickyErrFn).to.not.throw(specificError);
+    // TODO:
+    // expect(ickyErrFn).to.not.throw(PoorlyConstructedError, /testing/);
     expect(specificErrFn).to.throw(specificError);
 
     expect(badFn).to.throw(/testing/);
@@ -643,6 +646,11 @@ suite('expect', function () {
     err(function(){
       expect(ickyErrFn).to.throw(ReferenceError);
     }, /^(expected \[Function\] to throw 'ReferenceError' but)(.*)(PoorlyConstructedError|\{ Object \()(.*)(was thrown)$/);
+
+    expect(undefinedErrFn).to.throw(Error, /testing/);
+    // err(function(){
+
+    // });
 
     err(function(){
       expect(specificErrFn).to.throw(new ReferenceError('eek'));
